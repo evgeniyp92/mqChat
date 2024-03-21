@@ -1,0 +1,11 @@
+<li class="border-t-2 font-sans flex flex-col p-4 shrink">
+  <div class="flex flex-row justify-between items-start">
+    <div class="font-bold text-sm">{{ messageObject?.username }}</div>
+    <div class="font-light text-sm text-zinc-500">
+      {{ messageObject?.postDate | date: "medium" }}
+    </div>
+  </div>
+  <p class="text-sm">
+    {{ messageObject?.message }}
+  </p>
+</li>
