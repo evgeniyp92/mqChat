@@ -1,0 +1,7 @@
+{
+  "name": "mq-chat",
+  "version": "0.1.0",
+  "scripts": {
+    "start:frontend": "cd frontend && npm start"
+  }
+}
