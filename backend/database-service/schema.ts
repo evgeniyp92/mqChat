@@ -1,18 +1,18 @@
 import gql from "graphql-tag";
 
-export const typeDefs = gql`
+const typeDefs = gql`
   type Query {
-    "try to get the user from the database, if he exists"
-    user(username: String!): User
+    greetings: String
   }
 
   type Mutation {
-    "create a new user"
-    createUser(name: String!): User
+    createUser(username: String!): User
   }
 
   type User {
-    id: ID!
+    id: ID
     username: String
   }
 `;
+
+export default typeDefs;

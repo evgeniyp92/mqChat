@@ -1,32 +1,31 @@
 import "dotenv/config";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { resolvers } from "./resolvers";
-import { typeDefs } from "./schema";
-import { MongoClient } from "mongodb";
-import Users from "./data-sources/Users";
-import { UserModel } from "./models/UsersModel";
+import resolvers from "./resolvers";
+import typeDefs from "./schema";
+import * as mongoose from "mongoose";
+import { UsersAPI } from "./datasources/users-api";
+import { UserModel } from "./mongomodels/User";
 
-const mongoURI = process.env.DB_CONN_STRING;
-if (!mongoURI) throw new Error("MongoDB URI is missing");
-const client = new MongoClient(mongoURI);
-client.connect();
+const MONGO_URI = process.env.DB_CONN_STRING;
+if (!MONGO_URI) {
+  throw new Error("MongoDB URI is missing");
+}
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
+mongoose
+  .connect(MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.log(err.message));
 
-// TODO: Solve issue with top-level await not being suported here
+const server = new ApolloServer({ typeDefs, resolvers });
+
 startStandaloneServer(server, {
   listen: { port: 4000 },
-  context: async ({ req }) => ({
-    dataSources: {
-      users: new Users({
-        modelOrCollection: client.db().collection("users") || UserModel,
-      }),
-    },
-  }),
-}).then(({ url }) => {
-  console.log("Server running on port " + url);
-});
+  context: async () => {
+    return {
+      dataSources: {
+        usersAPI: new UsersAPI(),
+      },
+    };
+  },
+}).then(({ url }) => console.log("Server ready at port ", url));
