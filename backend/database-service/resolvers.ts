@@ -6,9 +6,8 @@ export const resolvers: Resolvers = {
   },
 
   Mutation: {
-    createUser: (_, __, { dataSources }) => {
-      console.log("I got here");
-      return dataSources.usersAPI.createUser("joe");
+    createUser: (_, { username }, { dataSources }) => {
+      return dataSources.usersAPI.createUser(username);
     },
   },
 };

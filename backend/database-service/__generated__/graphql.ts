@@ -34,8 +34,8 @@ export type Query = {
 
 export type User = {
   __typename?: 'User';
-  id?: Maybe<Scalars['ID']['output']>;
-  username?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  username: Scalars['String']['output'];
 };
 
 export type AdditionalEntityFields = {
@@ -190,8 +190,8 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
 };
 
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
