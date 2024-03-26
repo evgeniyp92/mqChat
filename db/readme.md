@@ -11,4 +11,4 @@ follow these instructions to get postgres running and available to connect via d
    1. If you do not specify the host, psql will go looking for a socket file in your /tmp dir, which is where pg running _on your bare metal_ would put the link to connect
    2. You'll be prompted for your password, enter your `[some-password]`
    3. You should then be given the psql prompt, from where you can try to list all tables `\l`
-5. Ensure the credentials in your server.ts file on the backend are properly specified. If they are, no errors should be thrown
+5. Ensure the credentials in your __server.ts file on the backend are properly specified. If they are, no errors should be thrown

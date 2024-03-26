@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "start:frontend": "cd frontend && npm start",
-    "start:backend": "cd backend && npm start"
+    "start:kafka": "cd backend/kafka-service && npm start",
+    "start:graphql": "cd backend/database-service && npm start"
   }
 }

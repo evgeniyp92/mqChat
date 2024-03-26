@@ -1,3 +1,4 @@
+// @ts-nocheck
 import express from "express";
 
 // GraphQL related imports
@@ -22,12 +23,12 @@ const root = {
   hello: () => "Hello World!",
 };
 
-// instance the express server
+// instance the express __server
 const app = express();
-// instance the http server wrapper
-const server = http.createServer(app);
+// instance the http __server wrapper
+const __server = http.createServer(app);
 // instance the socket.io wrapper
-const io = new Server(server);
+const io = new Server(__server);
 // configure postgraphile middleware
 const postgraphileOptions: PostGraphileOptions = {
   subscriptions: true,
@@ -72,6 +73,6 @@ io.on("connection", (socket) => {
   console.log("Socket connected");
 });
 
-server.listen(4000, () => {
+__server.listen(4000, () => {
   console.log("Listening on port 4000");
 });
