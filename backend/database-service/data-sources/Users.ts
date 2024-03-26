@@ -1,6 +1,12 @@
 import { MongoDataSource } from "apollo-datasource-mongodb";
+import { ObjectId } from "mongodb";
 
-export default class Users extends MongoDataSource<any> {
+interface UserDocument {
+  _id: ObjectId;
+  username: string;
+}
+
+export default class Users extends MongoDataSource<UserDocument> {
   getUser(userId: string) {
     return this.findOneById(userId);
   }
