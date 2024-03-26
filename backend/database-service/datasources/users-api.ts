@@ -1,15 +1,13 @@
-import { UserModel } from "../mongomodels/User";
-import { MongoDataSource } from "apollo-datasource-mongodb";
-import { ObjectId } from "mongodb";
-
-interface UserDocument {
-  _id?: ObjectId;
-  username: string;
-}
+import { User as UserModel } from "../mongomodels/User";
+import type { User } from "../__generated__/graphql";
 
 export class UsersAPI {
-  createUser(username: string) {
-    console.log("hello from the fully integrated users api");
-    return { username: "honk" };
+  async createUser(username: string): Promise<User> {
+    const user = await UserModel.create({ username: username });
+    return { username: user.username, id: user.id };
+  }
+
+  async findById(username: string) {
+    return {};
   }
 }

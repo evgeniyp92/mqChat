@@ -10,8 +10,8 @@ const typeDefs = gql`
   }
 
   type User {
-    id: ID
-    username: String
+    id: ID!
+    username: String!
   }
 `;
 
