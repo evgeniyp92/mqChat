@@ -5,6 +5,7 @@ import { createHandler } from "graphql-http/lib/use/express";
 import { buildSchema } from "graphql/utilities";
 // @ts-expect-error: This is the documented way of importing ruru even though TS doesn't like it
 import { ruruHTML } from "ruru/server";
+import { postgraphile } from "postgraphile";
 
 // Socket.io related imports
 import * as http from "http";
@@ -26,6 +27,18 @@ const root = {
 
 // instance the express server
 const app = express();
+// configure postgraphile middleware
+app.use(
+  postgraphile(
+    "postgres://postgres:password@localhost:5432",
+    schema as unknown as string,
+    {
+      watchPg: true,
+      graphiql: true,
+      enhanceGraphiql: true,
+    },
+  ),
+);
 // instance the http server wrapper
 const server = http.createServer(app);
 // instance the socket.io wrapper
@@ -41,10 +54,10 @@ app.all(
 );
 
 // Serve graphiQL
-app.get("/gql", (req, res) => {
-  res.type("html");
-  res.end(ruruHTML({ endpoint: "/graphql" }));
-});
+// app.get("/gql", (req, res) => {
+//   res.type("html");
+//   res.end(ruruHTML({ endpoint: "/graphql" }));
+// });
 
 io.on("connection", (socket) => {
   console.log("Socket connected");
