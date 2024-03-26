@@ -1,11 +1,8 @@
 import express from "express";
 
 // GraphQL related imports
-import { createHandler } from "graphql-http/lib/use/express";
 import { buildSchema } from "graphql/utilities";
-// @ts-expect-error: This is the documented way of importing ruru even though TS doesn't like it
-import { ruruHTML } from "ruru/server";
-import { postgraphile } from "postgraphile";
+import { postgraphile, PostGraphileOptions } from "postgraphile";
 
 // Socket.io related imports
 import * as http from "http";
@@ -27,37 +24,49 @@ const root = {
 
 // instance the express server
 const app = express();
-// configure postgraphile middleware
-app.use(
-  postgraphile(
-    "postgres://postgres:password@localhost:5432",
-    schema as unknown as string,
-    {
-      watchPg: true,
-      graphiql: true,
-      enhanceGraphiql: true,
-    },
-  ),
-);
 // instance the http server wrapper
 const server = http.createServer(app);
 // instance the socket.io wrapper
 const io = new Server(server);
-
-// Create and use the GraphQL handler
-app.all(
-  "/graphql",
-  createHandler({
-    schema: schema,
-    rootValue: root,
-  }),
+// configure postgraphile middleware
+const postgraphileOptions: PostGraphileOptions = {
+  subscriptions: true,
+  watchPg: true,
+  dynamicJson: true,
+  setofFunctionsContainNulls: false,
+  ignoreRBAC: false,
+  showErrorStack: "json",
+  extendedErrors: ["hint", "detail", "errcode"],
+  // appendPlugins: [require("@graphile-contrib/pg-simplify-inflector")],
+  exportGqlSchemaPath: "schema.graphql",
+  graphiql: true,
+  enhanceGraphiql: true,
+  // allowExplain(req) {
+  //   // TODO: customise condition!
+  //   return true;
+  // },
+  enableQueryBatching: true,
+  legacyRelations: "omit",
+  // pgSettings(req) {
+  //   /* TODO */
+  // },
+};
+app.use(
+  postgraphile(
+    "postgres://postgres:password@localhost:5432",
+    // schema here refers to sql schemas available in the database
+    "public",
+    postgraphileOptions,
+  ),
 );
 
-// Serve graphiQL
-// app.get("/gql", (req, res) => {
-//   res.type("html");
-//   res.end(ruruHTML({ endpoint: "/graphql" }));
-// });
+app.get("/", (req, res) => {
+  res.end("Hello World!");
+});
+
+app.get("/hello", (req, res) => {
+  res.end("Hello");
+});
 
 io.on("connection", (socket) => {
   console.log("Socket connected");
