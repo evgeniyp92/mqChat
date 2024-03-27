@@ -8,7 +8,7 @@ import { UsersAPI } from "./datasources/users-api";
 
 const MONGO_URI = process.env.DB_CONN_STRING;
 if (!MONGO_URI) {
-  throw new Error("MongoDB URI is missing");
+  throw new Error("MongoDB URI is missing. Check if the .env file exists");
 }
 
 mongoose
