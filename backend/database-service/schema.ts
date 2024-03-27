@@ -2,7 +2,9 @@ import gql from "graphql-tag";
 
 const typeDefs = gql`
   type Query {
-    greetings: String
+    users: [User!]!
+    user(username: String!): User
+    userById(id: String!): User
   }
 
   type Mutation {
@@ -10,8 +12,8 @@ const typeDefs = gql`
   }
 
   type User {
-    id: ID
-    username: String
+    id: ID!
+    username: String!
   }
 `;
 

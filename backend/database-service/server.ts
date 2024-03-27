@@ -5,11 +5,10 @@ import resolvers from "./resolvers";
 import typeDefs from "./schema";
 import * as mongoose from "mongoose";
 import { UsersAPI } from "./datasources/users-api";
-import { UserModel } from "./mongomodels/User";
 
 const MONGO_URI = process.env.DB_CONN_STRING;
 if (!MONGO_URI) {
-  throw new Error("MongoDB URI is missing");
+  throw new Error("MongoDB URI is missing. Check if the .env file exists");
 }
 
 mongoose

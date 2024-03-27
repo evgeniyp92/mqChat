@@ -29,13 +29,25 @@ export type MutationCreateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  greetings?: Maybe<Scalars['String']['output']>;
+  user?: Maybe<User>;
+  userById?: Maybe<User>;
+  users: Array<User>;
+};
+
+
+export type QueryUserArgs = {
+  username: Scalars['String']['input'];
+};
+
+
+export type QueryUserByIdArgs = {
+  id: Scalars['String']['input'];
 };
 
 export type User = {
   __typename?: 'User';
-  id?: Maybe<Scalars['ID']['output']>;
-  username?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  username: Scalars['String']['output'];
 };
 
 export type AdditionalEntityFields = {
@@ -186,12 +198,14 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
 };
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  greetings?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'username'>>;
+  userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByIdArgs, 'id'>>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
