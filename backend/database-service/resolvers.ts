@@ -2,7 +2,6 @@ import { Resolvers } from "./__generated__/graphql";
 
 export const resolvers: Resolvers = {
   Query: {
-    greetings: () => "GraphQL",
     users: (_, __, { dataSources }) => {
       return dataSources.usersAPI.getAllUsers();
     },

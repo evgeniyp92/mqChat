@@ -29,7 +29,6 @@ export type MutationCreateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  greetings?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
   userById?: Maybe<User>;
   users: Array<User>;
@@ -199,7 +198,6 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
 };
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  greetings?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'username'>>;
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByIdArgs, 'id'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
