@@ -7,7 +7,24 @@ export class UsersAPI {
     return { username: user.username, id: user.id };
   }
 
-  async findById(username: string) {
-    return {};
+  async getAllUsers(): Promise<User[]> {
+    const users = await UserModel.find();
+    return users.map((user) => ({ username: user.username, id: user.id }));
+  }
+
+  async findByName(username: string): Promise<User | null> {
+    const user = await UserModel.findOne({ username: username });
+    if (user) {
+      return { username: user.username, id: user.id };
+    }
+    return null;
+  }
+
+  async findById(id: string): Promise<User | null> {
+    const user = await UserModel.findById(id);
+    if (user) {
+      return { username: user.username, id: user.id };
+    }
+    return null;
   }
 }
