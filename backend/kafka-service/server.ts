@@ -5,7 +5,7 @@ import "dotenv/config";
 import { EventEmitter } from "node:events";
 import express from "express";
 import { createServer } from "node:http";
-import { streamHandler } from "./controllers/streamController";
+import { streamConsumer, streamProducer } from "./controllers/streamController";
 
 const emitter = new EventEmitter();
 emitter.emit("abcd", "Hello from the Kafka service thru an emitter");
@@ -17,7 +17,8 @@ app.get("/", (req, res) => {
   res.send("Hello from the server");
 });
 
-app.get("/stream/:id", streamHandler);
+app.get("/stream/:id", streamConsumer);
+app.post("/stream/:id", streamProducer);
 
 // set up socket.io to handle connection events by console logging the fact a client connected and listening for
 // event of type 'message' from the frontend

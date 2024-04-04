@@ -5,9 +5,12 @@ interface StreamRequest extends Request {
   params: {
     id: string;
   };
+  body: {
+    value?: string;
+  };
 }
 
-export const streamHandler = async (req: StreamRequest, res: Response) => {
+export const streamConsumer = async (req: StreamRequest, res: Response) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -26,4 +29,21 @@ export const streamHandler = async (req: StreamRequest, res: Response) => {
   req.on("close", () => {
     consumer.disconnect();
   });
+};
+
+export const streamProducer = async (req: StreamRequest, res: Response) => {
+  const producer = kafka.producer();
+  await producer.connect().catch((e) => console.error(e.message));
+  try {
+    await producer.send({
+      topic: "my-topic",
+      messages: [{ value: JSON.stringify("test") }],
+    });
+    res.status(200).json({ success: true });
+  } catch (e) {
+    console.error("Error sending data to Kafka:", e);
+    res
+      .status(500)
+      .json({ success: false, reason: "Error sending data to kafka" });
+  }
 };
