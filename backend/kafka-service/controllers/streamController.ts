@@ -6,10 +6,17 @@ interface StreamRequest extends Request {
     id: string;
   };
   body: {
-    value?: string;
+    data?: string;
   };
 }
 
+/**
+ * Stream consumer function.
+ *
+ * @param {StreamRequest} req - The stream request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves when the stream consumer is done processing.
+ */
 export const streamConsumer = async (req: StreamRequest, res: Response) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
@@ -31,13 +38,28 @@ export const streamConsumer = async (req: StreamRequest, res: Response) => {
   });
 };
 
+/**
+ * Asynchronously produces stream of data to Kafka topic "my-topic".
+ *
+ * @param {StreamRequest} req - The request object containing the data to be sent.
+ * @param {Response} res - The response object to send the status and response to.
+ *
+ * @returns {Promise<void>} A Promise that resolves when the data is successfully sent or rejects with an error.
+ */
 export const streamProducer = async (req: StreamRequest, res: Response) => {
   const producer = kafka.producer();
   await producer.connect().catch((e) => console.error(e.message));
+  console.log(req.body);
+  if (!req.body?.data || !req.body || typeof req.body?.data !== "string") {
+    res.status(400).json({
+      success: false,
+      reason: "No data provided in body, or format is incorrect",
+    });
+  }
   try {
     await producer.send({
-      topic: "my-topic",
-      messages: [{ value: JSON.stringify("test") }],
+      topic: "test",
+      messages: [{ value: JSON.stringify(req.body.data) }],
     });
     res.status(200).json({ success: true });
   } catch (e) {
