@@ -17,7 +17,10 @@ interface StreamRequest extends Request {
  * @param {Response} res - The response object.
  * @returns {Promise<void>} - A promise that resolves when the stream consumer is done processing.
  */
-export const streamConsumer = async (req: StreamRequest, res: Response) => {
+export const streamConsumer = async (
+  req: StreamRequest,
+  res: Response,
+): Promise<void> => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -46,7 +49,10 @@ export const streamConsumer = async (req: StreamRequest, res: Response) => {
  *
  * @returns {Promise<void>} A Promise that resolves when the data is successfully sent or rejects with an error.
  */
-export const streamProducer = async (req: StreamRequest, res: Response) => {
+export const streamProducer = async (
+  req: StreamRequest,
+  res: Response,
+): Promise<void> => {
   const producer = kafka.producer();
   await producer.connect().catch((e) => console.error(e.message));
   console.log(req.body);
