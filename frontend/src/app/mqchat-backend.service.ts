@@ -2,6 +2,9 @@ import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SseService } from './sse.service';
 
+// TODO: Research what ngzone is and why i need it here.
+// TODO: See what happens when I just wrap the event stream in an observable
+
 @Injectable({
   providedIn: 'root',
 })
