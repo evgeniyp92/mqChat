@@ -20,14 +20,16 @@ export class ChatViewComponent implements OnInit {
 
   async ngOnInit() {
     await this.localStorage.populateMessagesIfNotExists(this.chatItems);
-    const messages: ChatMessageObject[] | null =
-      await this.localStorage.checkMessages();
-    if (messages && messages.length > 0) {
-      this.chatItems = messages;
-    }
+    const messages = this.localStorage
+      .checkMessagesObservable()
+      .subscribe((r) => {
+        if (r) this.chatItems = r;
+      });
   }
 
   handleClick() {
     console.log('click');
   }
+
+  handleUpdate() {}
 }

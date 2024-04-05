@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as localforage from 'localforage';
 import { ChatMessageObject } from './chat/chat-item/chat-item.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,9 +9,7 @@ import { ChatMessageObject } from './chat/chat-item/chat-item.component';
 export class LocalStorageService {
   constructor() {}
 
-  test() {
-    console.log('boop');
-  }
+  public messages$ = new BehaviorSubject<ChatMessageObject[] | null>(null);
 
   async checkMessages() {
     try {
@@ -28,6 +27,19 @@ export class LocalStorageService {
     }
   }
 
+  checkMessagesObservable() {
+    const value = new BehaviorSubject<ChatMessageObject[] | null>([]);
+    const observable = value.asObservable();
+
+    const observer = async () => {
+      const messages = await this.checkMessages();
+      value.next(messages);
+    };
+
+    observer();
+    return observable;
+  }
+
   async populateMessagesIfNotExists(messagesToSet: ChatMessageObject[]) {
     const messages = await localforage.getItem('messages');
     if (!messages) {
@@ -35,15 +47,25 @@ export class LocalStorageService {
     }
   }
 
-  // TODO: Make this an observable
-  async postMessage(message: ChatMessageObject) {
-    const messages: ChatMessageObject[] | null =
-      await localforage.getItem('messages');
-    if (messages) {
-      messages.push(message);
-      await localforage.setItem('messages', messages);
-    } else {
-      await localforage.setItem('messages', [message]);
-    }
+  postMessage(message: ChatMessageObject) {
+    const value = new BehaviorSubject<ChatMessageObject[]>([]);
+    const observable = value.asObservable();
+
+    const observer = async () => {
+      let messages: ChatMessageObject[] | null =
+        await localforage.getItem('messages');
+      if (messages) {
+        messages = [...messages, message];
+        await localforage.setItem('messages', messages);
+        value.next(messages);
+      } else {
+        messages = [message];
+        await localforage.setItem('messages', messages);
+        value.next(messages);
+      }
+    };
+
+    observer();
+    return observable;
   }
 }
