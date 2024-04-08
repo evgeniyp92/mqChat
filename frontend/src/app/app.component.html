@@ -1,8 +1,8 @@
 <div class="flex flex-col h-dvh w-dvw">
   <app-header />
-  <div class="grow bg-zinc-100 flex flex-col-reverse overflow-scroll">
-    <app-chat-view [messages]="messages"/>
+  <div class="grow bg-slate-100 flex flex-col-reverse overflow-scroll">
+    <app-chat-view [messages]="messages" />
   </div>
-    <app-footer (onMessageSubmit)="handleOnMessageSubmit($event)"/>
+  <app-footer (onMessageSubmit)="handleOnMessageSubmit($event)" />
 </div>
 <router-outlet />
