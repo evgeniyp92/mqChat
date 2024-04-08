@@ -25,6 +25,7 @@ export type Mutation = {
 
 export type MutationCreateUserArgs = {
   username: Scalars['String']['input'];
+  uuid: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -48,6 +49,7 @@ export type User = {
   __typename?: 'User';
   id: Scalars['ID']['output'];
   username: Scalars['String']['output'];
+  uuid: Scalars['String']['output'];
 };
 
 export type AdditionalEntityFields = {
@@ -194,7 +196,7 @@ export type MapDirectiveArgs = {
 export type MapDirectiveResolver<Result, Parent, ContextType = DataSourceContext, Args = MapDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'username'>>;
+  createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'username' | 'uuid'>>;
 };
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -206,6 +208,7 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  uuid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

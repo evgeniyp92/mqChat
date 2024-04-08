@@ -14,8 +14,8 @@ export const resolvers: Resolvers = {
   },
 
   Mutation: {
-    createUser: (_, { username }, { dataSources }) => {
-      return dataSources.usersAPI.createUser(username);
+    createUser: (_, { username, uuid }, { dataSources }) => {
+      return dataSources.usersAPI.createUser(username, uuid);
     },
   },
 };
