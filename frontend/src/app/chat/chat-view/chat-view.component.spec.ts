@@ -8,7 +8,7 @@ describe('ChatViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ChatViewComponent]
+      declarations: [ChatViewComponent]
     })
     .compileComponents();
     

@@ -1,0 +1,19 @@
+<header
+  class="w-full border-b-2 border-b-zinc-300 shadow-lg h-20 bg-zinc-200 flex items-center justify-between px-8 shrink-0"
+>
+  <h1 class="font-sans text-4xl">mqChat</h1>
+  <div class="min-w-64 flex items-center gap-2">
+    <p class="mt-2 font-sans">Chatting as</p>
+    <div class="relative mt-2 flex items-center">
+      <input [formControl]="userName" (blur)="handleSubmit($event)" (keyup)="$event.key === 'Enter' &&
+      handleSubmit($event)"
+             type="email"
+             name="email"
+             id="email"
+             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-zinc-800 sm:text-sm sm:leading-6 font-sans" placeholder="Username (Optional)">
+      <div class="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+        <kbd class="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">&#9166;</kbd>
+      </div>
+    </div>
+  </div>
+</header>
