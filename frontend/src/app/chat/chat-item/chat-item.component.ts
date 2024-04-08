@@ -15,6 +15,6 @@ export class ChatItemComponent implements OnInit {
   @Input() messageObject: ChatMessageObject | null = null;
 
   ngOnInit(): void {
-    console.log(this.messageObject);
+    // console.log(this.messageObject);
   }
 }

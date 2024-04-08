@@ -24,13 +24,15 @@ export class IndexedDBService {
       : null;
   }
 
-  async setUserId(username: string | null) {
+  async setUserId(
+    username: string | null,
+    alreadyExisted: boolean,
+    uid: string,
+  ) {
     const user = {
       username: username || 'Anony Mouse',
-      // TODO: crypto.randomUUID is not supported on mobile Safari, look at polyfills or crypto.subtle, or get HTTPS
-      // Can do local https via ng serve --ssl
-      // https://stackoverflow.com/questions/39210467/get-angular-cli-to-ng-serve-over-https
-      uid: crypto.randomUUID(),
+      uid,
+      alreadyExisted,
     };
     await localforage.setItem('username', user);
     return user;
