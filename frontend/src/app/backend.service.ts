@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, NgZone } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { IndexedDBService } from './indexed-d-b.service';
 import { ChatMessageObject } from './chat/chat-item/chat-item.component';
 import { HttpClient } from '@angular/common/http';
 import { Apollo, gql } from 'apollo-angular';
+import { SSEService } from './sse.service';
+import { Statement } from '@angular/compiler';
 
 const GET_USER = gql`
   query GetUser($username: String!) {
@@ -39,10 +41,47 @@ export class BackendService {
     private indexedDBService: IndexedDBService,
     private http: HttpClient,
     private apollo: Apollo,
+    private sse: SSEService,
+    private zone: NgZone,
   ) {}
 
   messages$ = new BehaviorSubject<ChatMessageObject[]>([]);
   username$ = new BehaviorSubject<string | null>(null);
+
+  getServerSentEvent() {
+    return new Observable((observer) => {
+      this.indexedDBService.getUserId().then((data) => {
+        let user: { username: string; uid: string } | null = null;
+        if (data) {
+          user = data;
+        } else {
+        }
+
+        let subGroup: string;
+        if (user && user.uid) {
+          subGroup = user.uid;
+        } else {
+          subGroup = Math.random().toString(36).substr(2).toString();
+        }
+
+        const eventSource = this.sse.getEventSource(
+          `http://localhost:4500/stream/${subGroup}`,
+        );
+
+        eventSource.onmessage = (event) => {
+          this.zone.run(() => {
+            observer.next(event);
+          });
+        };
+
+        eventSource.onerror = (error) => {
+          this.zone.run(() => {
+            observer.error(error);
+          });
+        };
+      });
+    });
+  }
 
   async init() {
     const messages = await this.indexedDBService.getMessages();
@@ -57,6 +96,17 @@ export class BackendService {
     } else {
       this.username$.next('Anony Mouse');
     }
+    this.getServerSentEvent().subscribe((v: any) => {
+      console.log(v);
+      const stateMessages = this.messages$.value;
+      const newMessages: ChatMessageObject[] = [
+        ...stateMessages,
+        JSON.parse(v.data),
+      ];
+      this.messages$.next(newMessages);
+      this.indexedDBService.setMessages(newMessages);
+    });
+    console.log('Done initializing');
   }
 
   async postNewMessage(newMessage: ChatMessageObject) {
@@ -67,7 +117,9 @@ export class BackendService {
         .subscribe((response) => {
           console.log(response);
         });
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
     // let messages = this.messages$.value;
     // messages = [...messages, newMessage];
     // await this.indexedDBService.setMessages(messages);

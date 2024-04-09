@@ -18,7 +18,7 @@ export class IndexedDBService {
     await localforage.setItem('messages', newMessages);
   }
 
-  async getUserId(): Promise<{ username: string; uuid: string } | null> {
+  async getUserId(): Promise<{ username: string; uid: string } | null> {
     return (await localforage.getItem('username'))
       ? localforage.getItem('username')
       : null;
