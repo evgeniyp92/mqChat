@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 export interface ChatMessageObject {
   username: string;
-  postDate: Date;
+  postDate: Date | number;
   message: string;
 }
 

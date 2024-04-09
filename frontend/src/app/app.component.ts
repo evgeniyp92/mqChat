@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
     const submit: ChatMessageObject = {
       message: event.messageText,
       username: this.backend.username$.value!,
-      postDate: new Date(Date.now()),
+      postDate: Date.now(),
     };
     // try to post it to event stream
 
