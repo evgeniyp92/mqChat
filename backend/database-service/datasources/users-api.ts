@@ -4,6 +4,7 @@ import type { User } from "../__generated__/graphql";
 export class UsersAPI {
   async createUser(username: string, uuid: string): Promise<User> {
     const user = await UserModel.create({ username, uuid });
+    console.log(user);
     return { username: user.username, id: user.id, uuid: user.uuid };
   }
 
@@ -18,6 +19,7 @@ export class UsersAPI {
 
   async findByName(username: string): Promise<User | null> {
     const user = await UserModel.findOne({ username: username });
+    console.log(user);
     if (user) {
       return { username: user.username, id: user.id, uuid: user.uuid };
     }

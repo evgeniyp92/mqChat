@@ -31,9 +31,9 @@ export class AppComponent implements OnInit {
       postDate: Date.now(),
     };
     // try to post it to event stream
+    this.backend.postNewMessage(submit).then();
 
     // update localStorage with the new message if successful
-    this.backend.postNewMessage(submit).then();
 
     // update app state with message -- redundant because of BehaviorSubject and will be handled in BackendService
   }
