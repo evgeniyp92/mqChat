@@ -5,7 +5,6 @@ import { ChatMessageObject } from './chat/chat-item/chat-item.component';
 import { HttpClient } from '@angular/common/http';
 import { Apollo, gql } from 'apollo-angular';
 import { SSEService } from './sse.service';
-import { Statement } from '@angular/compiler';
 
 const GET_USER = gql`
   query GetUser($username: String!) {
@@ -48,6 +47,7 @@ export class BackendService {
   messages$ = new BehaviorSubject<ChatMessageObject[]>([]);
   username$ = new BehaviorSubject<string | null>(null);
 
+  // Helper function that prepares everything for reading SSE from the Kafka backend
   getServerSentEvent() {
     return new Observable((observer) => {
       this.indexedDBService.getUserId().then((data) => {
@@ -83,6 +83,8 @@ export class BackendService {
     });
   }
 
+  // Init function that reads messages from Indexed DB, gets/sets the username in state
+  // and subscribes to the event stream under a unique uid
   async init() {
     const messages = await this.indexedDBService.getMessages();
     this.messages$.next(messages);
@@ -97,18 +99,21 @@ export class BackendService {
       this.username$.next('Anony Mouse');
     }
     this.getServerSentEvent().subscribe((v: any) => {
-      console.log(v);
       const stateMessages = this.messages$.value;
       const newMessages: ChatMessageObject[] = [
         ...stateMessages,
         JSON.parse(v.data),
       ];
       this.messages$.next(newMessages);
+      // TODO: Maybe shift to storing messages in state and write to IndexedDB in NgOnDestroy?
+      // https://stackoverflow.com/questions/3888902/detect-browser-or-tab-closing
+      // https://developer.mozilla.org/en-US/docs/Web/API/Window/unload_event
       this.indexedDBService.setMessages(newMessages);
     });
     console.log('Done initializing');
   }
 
+  // Function that handles posting new messages via HTTP
   async postNewMessage(newMessage: ChatMessageObject) {
     console.log(newMessage);
     try {
@@ -120,6 +125,7 @@ export class BackendService {
     } catch (err) {
       console.log(err);
     }
+    // This chunk is redundant and handled by the SSE Observable
     // let messages = this.messages$.value;
     // messages = [...messages, newMessage];
     // await this.indexedDBService.setMessages(messages);
@@ -129,7 +135,9 @@ export class BackendService {
   async setUsername(username: string | null) {
     let alreadyExists = false;
     let uid = crypto.randomUUID();
-    // bug in here due to nesting subscribers -- unique usernames dont get properly updated
+    // there used to be a bug in here due to nesting subscribers -- unique usernames didnt get properly updated --
+    // this was likely down to poor error handling in the apollo graphql backend. This nested subscription works
+    // properly now, even though its ugly and should be refactored
     // TODO: Refactor this using RxJS -- Will switchmap do the trick?
     this.apollo
       .watchQuery<any>({
