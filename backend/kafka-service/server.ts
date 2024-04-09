@@ -6,6 +6,7 @@ import { EventEmitter } from "node:events";
 import express from "express";
 import { createServer } from "node:http";
 import { streamConsumer, streamProducer } from "./controllers/streamController";
+import cors from "cors";
 
 const emitter = new EventEmitter();
 emitter.emit("abcd", "Hello from the Kafka service thru an emitter");
@@ -14,13 +15,14 @@ const app = express();
 const server = createServer(app);
 
 app.use(express.json({ limit: "10kb" }));
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Hello from the server");
 });
 
-app.get("/stream/:id", streamConsumer);
 app.post("/stream/", streamProducer);
+app.get("/stream/:id", streamConsumer);
 
 // set up socket.io to handle connection events by console logging the fact a client connected and listening for
 // event of type 'message' from the frontend

@@ -24,6 +24,7 @@ export const streamConsumer = async (
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
+  res.setHeader("X-Accel-Buffering", "no");
   res.flushHeaders();
 
   const consumer = kafka.consumer({ groupId: req.params.id });
@@ -56,7 +57,7 @@ export const streamProducer = async (
   const producer = kafka.producer();
   await producer.connect().catch((e) => console.error(e.message));
   console.log(req.body);
-  if (!req.body?.data || !req.body || typeof req.body?.data !== "string") {
+  if (!req.body) {
     res.status(400).json({
       success: false,
       reason: "No data provided in body, or format is incorrect",
@@ -64,8 +65,8 @@ export const streamProducer = async (
   }
   try {
     await producer.send({
-      topic: "test",
-      messages: [{ value: JSON.stringify(req.body.data) }],
+      topic: "mqTopic",
+      messages: [{ value: JSON.stringify(req.body) }],
     });
     res.status(200).json({ success: true });
   } catch (e) {

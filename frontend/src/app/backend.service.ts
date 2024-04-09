@@ -60,10 +60,18 @@ export class BackendService {
   }
 
   async postNewMessage(newMessage: ChatMessageObject) {
-    let messages = this.messages$.value;
-    messages = [...messages, newMessage];
-    await this.indexedDBService.setMessages(messages);
-    this.messages$.next(messages);
+    console.log(newMessage);
+    try {
+      this.http
+        .post('http://localhost:4500/stream', newMessage)
+        .subscribe((response) => {
+          console.log(response);
+        });
+    } catch (err) {}
+    // let messages = this.messages$.value;
+    // messages = [...messages, newMessage];
+    // await this.indexedDBService.setMessages(messages);
+    // this.messages$.next(messages);
   }
 
   async setUsername(username: string | null) {
