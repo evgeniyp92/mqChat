@@ -3,6 +3,7 @@ LABEL authors="epimenov"
 COPY ./ ./
 RUN npm install
 ENV DB_CONN_STRING="mongodb+srv://dbAdmin:jKnUoJV015sn4AZ5@cluster0.hiltach.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+EXPOSE 4000
 CMD ["npm", "start"]
 
 #ENTRYPOINT ["top", "-b"]
