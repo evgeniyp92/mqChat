@@ -1,0 +1,21 @@
+services:
+  web:
+    image: evgeniyp92/mqchat-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - kafka
+      - graphql
+  kafka:
+    image: evgeniyp92/mqchat-kafka
+    ports:
+      - "4500:4500"
+    environment:
+      - KAFKA_USERNAME=dXByaWdodC1ib3hlci0xMTkzMiR0lUfQba1az2u5hzxxtEnpZHZfBNVrDw75e0M
+      - KAFKA_PW=YTM2NzBmODMtYWIzNy00ZmY1LWEwMTgtY2ZhMWU0YTk4YjQ2
+  graphql:
+    image: evgeniyp92/mqchat-database
+    ports:
+      - "4000:4000"
+    environment:
+      - DB_CONN_STRING=mongodb+srv://dbAdmin:jKnUoJV015sn4AZ5@cluster0.hiltach.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
