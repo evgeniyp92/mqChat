@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka
+  labels:
+    app: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      name: kafka
+      labels:
+        app: kafka
+    spec:
+      containers:
+        - name: kafka
+          image: evgeniyp92/mqchat-kafka:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4500
+              protocol: TCP
+      restartPolicy: Always
+      
