@@ -22,6 +22,6 @@ export class HeaderComponent implements OnInit {
 
   // TODO: Do the types even matter here, we just need to know to fire the function, it's handled in DOM
   async handleSubmit(event: FocusEvent | KeyboardEvent) {
-    await this.backendService.setUsername(this.userName.getRawValue());
+    await this.backendService.setUsername(this.userName.value);
   }
 }

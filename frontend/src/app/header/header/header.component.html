@@ -9,6 +9,7 @@
         [formControl]="userName"
         (blur)="handleSubmit($event)"
         (keyup)="$event.key === 'Enter' && handleSubmit($event)"
+        (mouseout)="handleSubmit($event)"
         type="email"
         name="email"
         id="email"

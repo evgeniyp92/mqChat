@@ -56,10 +56,10 @@ export class BackendService {
         console.log(data);
 
         // Dangerous, fix this
-        let subGroup = data!.uid;
+        let subGroup = data?.uid || v4();
 
         const eventSource = this.sse.getEventSource(
-          `http://localhost:4500/stream/${subGroup}`,
+          `http://192.168.2.227:4500/stream/${subGroup}`,
         );
 
         eventSource.onmessage = (event) => {
@@ -112,7 +112,7 @@ export class BackendService {
     console.log(newMessage);
     try {
       this.http
-        .post('http://localhost:4500/stream', newMessage)
+        .post('http://192.168.2.227:4500/stream', newMessage)
         .subscribe((response) => {
           console.log(response);
         });
