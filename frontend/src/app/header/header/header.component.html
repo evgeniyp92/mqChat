@@ -1,7 +1,7 @@
 <header
-  class="w-full border-b-green-500 border-b-8 shadow-lg h-20 bg-slate-100 flex items-center justify-between px-2 shrink-0"
+  class="w-full border-b-sky-500 border-b-8 shadow-lg h-20 bg-slate-100 flex items-center justify-between px-2 shrink-0"
 >
-  <h1 class="font-sans text-4xl text-green-700">mqChat</h1>
+  <h1 class="font-sans text-4xl text-sky-700">mqChat</h1>
   <div class="min-w-64 flex items-center gap-2">
     <p class="font-sans">Chatting as</p>
     <div class="relative flex items-center">
@@ -27,8 +27,8 @@
       (click)="handleSubmit($event)"
       [disabled]="userName.pristine"
       [ngClass]="{
-        'bg-green-500/25': userName.pristine,
-        'bg-green-500': !userName.pristine
+        'bg-sky-500/25': userName.pristine,
+        'bg-sky-500': !userName.pristine
       }"
     >
       Submit
