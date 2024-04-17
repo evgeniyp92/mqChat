@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, isDevMode } from '@angular/core';
 import { BackendService } from './backend.service';
 import { ChatMessageObject } from './chat/chat-item/chat-item.component';
 import { Meta } from '@angular/platform-browser';
@@ -27,6 +27,11 @@ export class AppComponent implements OnInit {
     // expect a userid
     // open a connection to localhost:4500/[]
     // for each message received, push it to localStorage and update app state
+    if (isDevMode()) {
+      console.log('Dev Mode');
+    } else {
+      console.log('Production');
+    }
   }
 
   handleOnMessageSubmit(event: { messageText: string }) {
