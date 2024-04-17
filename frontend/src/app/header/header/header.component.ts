@@ -21,7 +21,9 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {}
 
   // TODO: Do the types even matter here, we just need to know to fire the function, it's handled in DOM
-  async handleSubmit(event: FocusEvent | KeyboardEvent) {
+  async handleSubmit(event: FocusEvent | KeyboardEvent | TouchEvent) {
+    console.log(this.userName.value);
     await this.backendService.setUsername(this.userName.value);
+    this.userName.markAsPristine();
   }
 }

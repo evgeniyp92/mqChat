@@ -9,7 +9,6 @@
         [formControl]="userName"
         (blur)="handleSubmit($event)"
         (keyup)="$event.key === 'Enter' && handleSubmit($event)"
-        (mouseout)="handleSubmit($event)"
         type="email"
         name="email"
         id="email"
@@ -23,5 +22,16 @@
         >
       </div>
     </div>
+    <button
+      class="py-2 px-4 rounded font-sans text-white drop-shadow"
+      (click)="handleSubmit($event)"
+      [disabled]="userName.pristine"
+      [ngClass]="{
+        'bg-green-500/25': userName.pristine,
+        'bg-green-500': !userName.pristine
+      }"
+    >
+      Submit
+    </button>
   </div>
 </header>

@@ -12,11 +12,21 @@ export class FooterComponent {
   @Output() onMessageSubmit = new EventEmitter();
 
   handleSubmit() {
-    this.onMessageSubmit.emit({ messageText: this.messageText });
+    if (this.messageText.length > 0) {
+      this.onMessageSubmit.emit({ messageText: this.messageText });
+      // TODO: This sucks because it is 100% optimistic that the message will be sent, it should wait for some kind of
+      //  acknowledgement the message has been posted then clear the field
+    }
+    this.messageText = '';
   }
 
-  handleKeypress(_: any) {
+  handleKeypress(event: KeyboardEvent) {
     // TODO: Decide what to do with keypresses
     console.log('handleKeyPress');
+    console.log(event);
+    if (event.key === 'Enter' && event.shiftKey) {
+      event.preventDefault();
+      this.handleSubmit();
+    }
   }
 }

@@ -53,7 +53,7 @@ export class BackendService {
     return new Observable((observer) => {
       this.indexedDBService.getUserId().then((data) => {
         // TODO: Need to figure out what to do in the event there is no user
-        console.log(data);
+        // console.log(data);
 
         // Dangerous, fix this
         let subGroup = data?.uid || v4();
@@ -154,18 +154,20 @@ export class BackendService {
               this.username$.next(result.username);
             });
         } else {
+          const uuidToSet = v4();
           this.apollo
             .mutate({
               mutation: CREATE_USER,
-              variables: { username: username, uuid: uid },
+              variables: { username: username, uuid: uuidToSet },
             })
             .subscribe(({ data }) => {
               console.log('Create user sub');
-              console.log(data);
+              // @ts-expect-error
+              console.log(data.createUser);
               // alreadyExists = false;
               this.indexedDBService
                 // @ts-ignore
-                .setUserId(data.user.username, false, uid)
+                .setUserId(data.createUser.username, false, uuidToSet)
                 .then((result) => {
                   this.username$.next(result.username);
                 });
