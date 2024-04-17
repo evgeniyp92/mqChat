@@ -52,19 +52,11 @@ export class BackendService {
   getServerSentEvent() {
     return new Observable((observer) => {
       this.indexedDBService.getUserId().then((data) => {
-        let user: { username: string; uid: string } | null = null;
-        if (data) {
-          user = data;
-        } else {
-        }
+        // TODO: Need to figure out what to do in the event there is no user
+        console.log(data);
 
-        let subGroup: string;
-        console.log(user);
-        if (user && user.uid) {
-          subGroup = user.uid;
-        } else {
-          subGroup = Math.random().toString(36).substr(2).toString();
-        }
+        // Dangerous, fix this
+        let subGroup = data!.uid;
 
         const eventSource = this.sse.getEventSource(
           `http://localhost:4500/stream/${subGroup}`,
@@ -136,12 +128,12 @@ export class BackendService {
 
   async setUsername(username: string | null) {
     let alreadyExists = false;
-    let uid: string = v4();
-    console.log(uid);
+    let uid: string;
+    let userToSet: {} = {};
     // there used to be a bug in here due to nesting subscribers -- unique usernames didnt get properly updated --
     // this was likely down to poor error handling in the apollo graphql backend. This nested subscription works
     // properly now, even though its ugly and should be refactored
-    // TODO: Refactor this using RxJS -- Will switchmap do the trick?
+    // TODO: Refactor this absolute nightmare of a function
     this.apollo
       .watchQuery<any>({
         query: GET_USER,
@@ -150,9 +142,17 @@ export class BackendService {
         },
       })
       .valueChanges.subscribe(({ data }) => {
+        console.log('Get user sub');
+        console.log(data);
         if (data && data.user?.username) {
           console.log('Username already found in database');
           alreadyExists = true;
+          uid = data.user.uuid;
+          this.indexedDBService
+            .setUserId(data.user.username, true, uid)
+            .then((result) => {
+              this.username$.next(result.username);
+            });
         } else {
           this.apollo
             .mutate({
@@ -160,18 +160,26 @@ export class BackendService {
               variables: { username: username, uuid: uid },
             })
             .subscribe(({ data }) => {
-              alreadyExists = false;
+              console.log('Create user sub');
+              console.log(data);
+              // alreadyExists = false;
+              this.indexedDBService
+                // @ts-ignore
+                .setUserId(data.user.username, false, uid)
+                .then((result) => {
+                  this.username$.next(result.username);
+                });
             });
         }
       });
     // TODO: crypto.randomUUID is not supported on mobile Safari, look at polyfills or crypto.subtle, or get HTTPS
     // Can do local https via ng serve --ssl
     // https://stackoverflow.com/questions/39210467/get-angular-cli-to-ng-serve-over-https
-    const result = await this.indexedDBService.setUserId(
-      username,
-      alreadyExists,
-      uid,
-    );
-    this.username$.next(result.username);
+    // const result = await this.indexedDBService.setUserId(
+    //   username,
+    //   alreadyExists,
+    //   uid,
+    // );
+    // this.username$.next(result.username);
   }
 }

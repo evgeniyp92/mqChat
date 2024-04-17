@@ -21,10 +21,8 @@ export class IndexedDBService {
   }
 
   // Tries to retrieve the current user, if one is stored in Indexed DB
-  async getUserId(): Promise<{ username: string; uid: string } | null> {
-    return (await localforage.getItem('username'))
-      ? localforage.getItem('username')
-      : null;
+  getUserId(): Promise<{ username: string; uid: string } | null> {
+    return localforage.getItem('username');
   }
 
   // Sets a user in Indexed DB
