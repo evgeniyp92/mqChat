@@ -5,6 +5,7 @@ import { ChatMessageObject } from './chat/chat-item/chat-item.component';
 import { HttpClient } from '@angular/common/http';
 import { Apollo, gql } from 'apollo-angular';
 import { SSEService } from './sse.service';
+import { v4 } from 'uuid';
 
 const GET_USER = gql`
   query GetUser($username: String!) {
@@ -58,6 +59,7 @@ export class BackendService {
         }
 
         let subGroup: string;
+        console.log(user);
         if (user && user.uid) {
           subGroup = user.uid;
         } else {
@@ -134,7 +136,8 @@ export class BackendService {
 
   async setUsername(username: string | null) {
     let alreadyExists = false;
-    let uid = crypto.randomUUID();
+    let uid: string = v4();
+    console.log(uid);
     // there used to be a bug in here due to nesting subscribers -- unique usernames didnt get properly updated --
     // this was likely down to poor error handling in the apollo graphql backend. This nested subscription works
     // properly now, even though its ugly and should be refactored
