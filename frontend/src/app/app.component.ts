@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendService } from './backend.service';
 import { ChatMessageObject } from './chat/chat-item/chat-item.component';
+import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -14,10 +15,14 @@ export class AppComponent implements OnInit {
   });
   messages: ChatMessageObject[] = [];
 
-  constructor(private backend: BackendService) {}
+  constructor(
+    private backend: BackendService,
+    private metaService: Meta,
+  ) {}
 
   ngOnInit() {
     this.backend.init().then(() => console.log('Done Initializing'));
+    this.metaService.addTag({ name: 'theme-color', content: '#e4e4e7' });
     // read messages from localStorage and push to app state
     // expect a userid
     // open a connection to localhost:4500/[]
